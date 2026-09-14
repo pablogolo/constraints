@@ -1,1 +1,68 @@
+macro*10 12000 ; 
+macro[ 3000 ; 
+macro=; 
+mxr 1000 ; 
+var: 
+   iter 
+   allnods[ 11000 ] tsof[5] ttree[5] 
+   myl nul sdsof[ 20 ] sdtree[ 20 ]  
+   valsof[ 20 ] valtree[ 20 ] ; 
+; 
+macfloat 0 ; 
+set iter 0 ; 
+sil = all ; 
+lquote[ ; lquote=; 
+clb ; 
+loop 500+500 9800
 
+  loop 0 4 
+    rseed * ; 
+    xr/0 10000 ; ra 1 ; xr+0 90 10 ; 
+    ho 10 / 10; 
+    set * allnods * ( ntax ) ; 
+    set * allnods += ( ntax ) ; 
+
+    const-; k0; ra 1 ; 
+    macfloat 0 ; 
+    condense /0 'allnods[ 0-#1 ]' ; 
+    macfloat 4 ; 
+    forc = &0 ; const = ; 
+    k0; 
+    resettime ; 
+    mu1=ho1 ; 
+    set ttree[ #2 ] time ;  
+    
+    tv - ; 
+    tv > 0 ; 
+
+    const-; k0; ra 1 ; 
+    macfloat 0 ; 
+    condense /0 'allnods[ 0-#1 ]' ; 
+    macfloat 4 ; 
+    forc /&0 ; const = ; 
+    k0; 
+    resettime ; 
+    mu1=ho1 ; 
+    set tsof[ #2 ] time ;  
+    
+    stop 
+    
+  set sdtree [ 'iter' ]   stddev[ ttree 5 ] ;   
+  set sdsof  [ 'iter' ]   stddev[ tsof 5 ] ;   
+  set valtree[ 'iter' ]  meanval[ ttree 5 ] ;   
+  set valsof [ 'iter' ]  meanval[ tsof 5 ] ;   
+
+  macfloat 4 ;   
+  quote : #1 , 'valtree[ 'iter' ]'&241 'sdtree[ 'iter' ]' , 'valsof[ 'iter' ]'&241 'sdsof[ 'iter' ]' &10 ; 
+  macfloat 0 ; 
+
+  set iter ++ ;
+
+  stop 
+
+log + tnt-vs-itself.csv; 
+svtx ; 
+log / ; 
+
+  
+proc/; 
