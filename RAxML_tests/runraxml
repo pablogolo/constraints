@@ -1,1 +1,2 @@
-
+rm infile.raxml.*
+./raxml-ng --data-type BIN --msa infile --start --model GTR --tree-constraint cons.nw --threads 1 --seed 1234 --tree pars"{1}"
