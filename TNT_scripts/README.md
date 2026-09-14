@@ -42,19 +42,14 @@ less meaningful).
 
 If no argument is given, T=15, F=6, R=1,000, C=20.
 
+TNTVSITSELF
 
+This script checks the differences in time for a random sequence plus TBR, using the same constraints as tree-constraints and as 
+group-membership variables, for datasets with 10,000 taxa and 10 characters (generated on a random model tree, with P(chg)=0.10).
+The constraints are based on the model tree, with different numbers of nodes marked for removal (starting with 500, successively 
+adding 500 until groups are marked 9,500 times; the script does not check whether the same group is marked twice, so it is possible 
+that fewer groups are removed --more likely with larger number of groups removed). 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+At the end, it writes to "tnt-vs-itself.csv" the comma-separated values for the times used for each run. Columns are: number of 
+times a group is marked for removal, time for constraints as tree-constraints, time for constraints as group membership variables.
 
