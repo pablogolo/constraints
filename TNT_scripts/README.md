@@ -1,5 +1,7 @@
 This folder contains TNT scripts, used for checking the correctness and efficiency of the different types of constraints, as implemented in TNT.
 
+All the scripts can be downloaded onto your computer and run; it is best to place them in directories/folders _without_ blanks in the name.
+
 GRANDTEST
 
 The script grandtest.run takes as parameters the number of datasets to generate (G), the number of taxa (T, always with half 
