@@ -1,1 +1,73 @@
+macro=; 
+lquo[; 
+if ( argnumber < 2 ) 
+errmsg &10&10&10
+-------------------------------------------------
 
+Este script hace una matriz (de todos 0&39s) para
+el numero de caracteres y taxones especificados
+como primero y segundo argumento .
+
+Usando asteriscos en lugar de caracteres/taxones,
+renombra los taxones actuales.
+
+Opcionalmente, si se le da un tercer argumento,
+salva la matriz (recuerde: todos ceros!) a un
+archivo con el nombre especificado.
+
+-------------------------------------------------
+; 
+end 
+set - ; 
+var: isrename ; 
+set isrename 0 ; 
+if ( !eqstring[ %1 * ] ) 
+   xr/%1 %2 1 ; 
+else set isrename 1 ; end 
+macro=;
+var: i j at iters ; 
+goto = %0 ; 
+sil=all ;
+set at 0 ;
+set iters 0 ; 
+report - ; 
+loop 0 ntax 
+   set i 'at' + 65 ;
+   set j $&'i';
+   goto goname #1 ; 
+   stop
+if ( argnumber < 3 && !'isrename' ) 
+   sil-all ; 
+   quote &10&10MATRIZ CREADA:&10; 
+   xread!; 
+   end   
+if ( argnumber > 2 ) 
+   silent = con buffer ; 
+   silent - file ; 
+   log %3 ; 
+   quote xread &10&39Matriz alfabestrica&39&10 %1 %2 &10; 
+   xread ! ; 
+   quote .,&10proc/.,&10; 
+   log/; 
+   if ( !'isrename' )  
+      quote :Matriz salvada al archivo &34 %3&34 &10; 
+      end 
+   end 
+lquote- ; lquote] ; 
+if ( !'isrename' ) 
+   sil-all ; 
+   report=; 
+   end 
+proc/; 
+
+label goname ;
+var: q ; 
+set q j ; 
+if ( %1 < 26 ) 
+    taxnam /$('q') %1 ; 
+else
+  taxnam /$j'iters' %1 ; 
+  end 
+set at ++ ; 
+if ( 'at' == 26 ) set iters ++ ; set at 0 ; end 
+proc/; 
