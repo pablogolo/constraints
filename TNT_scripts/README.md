@@ -4,7 +4,7 @@ GRANDTEST
 
 The script grandtest.run takes as parameters the number of datasets to generate (G), the number of taxa (T, always with half 
 as many characters as taxa)), the number of positive (=tree) constraints (C), the number of negative constraints (N), and the 
-number of floating taxa (F), as arguments (in that order). 
+number of floating taxa (F), as arguments (in that order). All these arguments are mandatory.
 
 Optionally, use "-v" as sixth (and last) argument, to generate diagrams of the constraints for every dataset (this can be a LOT
 of output!).
@@ -23,6 +23,33 @@ reproduce the dataset for which that number of Wagner trees (out of the 1,000) n
         grandtest 1 T C N F ; <enter>
 
 Of course, the dataset and constraints will be identical only if T, C, N, and F are the same. 
+
+ERRORCHKS
+
+The script errorchks.run checks whether using the same constraints as tree-constraints, or group-membership variables, produce 
+identical results. The script generates a dataset for the specified number of taxa (T, first arg), uses as constraint a random 
+tree (with a probability of collapsing a branch of 0.33, and no more than 4-tomies) with F (second arg) taxa removed (=floating 
+for the constraints), and does a random addition sequence Wagner tree followed by TBR (with mulpars on, saving up to 1,000 
+trees (removing zero-lengthb ranches using "rule 1" of TNT) using the same constraints as tree-constraints and group-membership 
+variables, comparing the results. If there is any difference in the number of trees considered as distinct, or their lengths, 
+the program reports an error. This process is repeated R times (third arg). Every dataset has C characters (fourth arg). That is 
+
+        errorchks T F R C ; <enter>
+
+Keep in mind that with two few characters, there may be too many MPTs, filling the memory with 1,000 trees; with too many, there 
+may be no zero-length branches, so that no branch is collapsed, regardless of constraints; either of these two cases make the test 
+less meaningful).
+
+If no argument is given, T=15, F=6, R=1,000, C=20.
+
+
+
+
+
+
+
+
+
 
 
 
