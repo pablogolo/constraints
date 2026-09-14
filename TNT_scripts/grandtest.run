@@ -1,1 +1,142 @@
+mxr 400 ; 
+macro=; 
+if ( argnumber < 5 ) 
+errmsg 
+Give Nr of replicates,
+     Nr of taxa, 
+     Nr of positive constraints, 
+     Nr of neg constraints, 
+       and 
+     Nr of missing taxa 
+     Optionally, use -v as final arg for a verbose test 
+   ; 
+end 
+var: daseed nfixes nreps fixdreps ; 
+rep-; 
+sil=all ;
+goto = %0 ;  
+set nreps %1 ; 
+set fixdreps 0 ; 
+set nfixes 0 ; 
+set daseed 1 ; 
+loop 1 'nreps'  
+   rseed 'daseed' ; 
+   set daseed += 137 ; 
+   progress #1 1000 GO; 
+   goto xxhaust %2 %3 %4 %5 %6 ; 
+   set nfixes += exstatus ; 
+   if ( exstatus ) set fixdreps ++ ; end 
+   stop 
+progress/; 
+sil-all ; 
+quote FIXED 'nfixes' WAGNER TREES (IN 'fixdreps' REPLICATIONS) --no errors!; 
+proc/; 
 
+label xxhaust ; 
+var: 
+  verbose begseed rs npos nneg tax chars nmis ; 
+macfloat 0 ; 
+set tax %1 ; 
+set npos %2 ; 
+set nneg %3 ; 
+set chars %1 / 2 ; 
+set nmis %4 ; 
+set verbose 0 ; 
+if ( argnumber > 4 ) 
+  if ( eqstring [ %5 -v ] ) set verbose 1 ; end 
+  end 
+if ( rseed == 1 ) rseed 0 ; rseed * ; end 
+set begseed rseed ; 
+macseed 'begseed' ; 
+xread /'chars' 'tax' ; 
+var: possel[ root ] negsel[ root ] repeat nrepeats range ; 
+ra 1 ; 
+var: j k ; 
+loop 1 5 
+   set j getrandom[ 1 (nnodes[0]-1) ] ; 
+   set k getrandom[ 1 (nnodes[0]-1) ] ; 
+   if ( 'j' == root ) setloop #1 ; end 
+   if ( anc[ 0 'j' ] == 'k' ) setloop #1 ; end 
+   edit ] 0 'tax' 'j' 'k' ; 
+   stop
+var - j ; 
+ra 1 ;    
+coll 0 ; 
+agroup =0 0 * 'nmis' <0 0 ; 
+rer ! ; 
+prunt 0 / {0} ; 
+set range nnodes[ 0 ] - root ; 
+if ( 'npos' > 'range' ) set npos 'range' ; end 
+set possel randomlist[ 'range' ] ; set * possel += ( root + 1 ) ; 
+rer !;   
+loop 0 ('npos'-1) 
+  if ( anc[ 0 'possel[ #1 ]' ] == root ) 
+      set possel[ #1 ] 'possel[ ('npos'-1) ]' ; 
+      set npos -- ; 
+      endloop ; 
+      end 
+  stop
+condense /0 .-'possel[0-('npos'-1)]' ;           
+rseed * ; 
+agroup =1 0 * 'nmis' <1 0 ; 
+prunt 1 / {1} ; 
+tcomp * 1 0 ; 
+tc 0 2 ; 
+set range nnodes[ 1 ] - root ; 
+if ( 'nneg' > 'range' ) set nneg 'range' ; end 
+var range ; 
+set negsel randomlist[ 'range' ] ; set * negsel += ( root + 1 ) ; 
+loop 0 ('nneg'-1) 
+  if ( anc[ 1 'negsel[ #1 ]' ] == root ) 
+     set negsel[ #1 ] 'negsel[ ('nneg'-1) ]' ; 
+     set negsel -- ; 
+     endloop ; 
+     end 
+  stop
+condense /1 .-'negsel[0-('nneg'-1)]' ; 
+forc = &0 : &1 ; 
+const=; 
+constr] ; 
+constr\; 
+goto [ %0 onfail ; 
+keep 0 ; 
+if ( 'verbose' ) 
+  taxalfa * * ; taxname=; sil - all ; 
+  goto = %0 ; 
+  report = ; 
+  quote CONSTRAINTS ARE: 
+  taxn=; 
+  forc * ; 
+  end 
+mu1000=ho1 ; 
+report- ; 
+sil = all ; 
+if ( fixwags ) 
+  var: i ; 
+  set i fixwags ; 
+  quote :WITH SEED 'begseed' FIXED 'i' SEQUENCES ; 
+  return 'i' ; 
+  end 
+return 0 ; 
+proc/; 
+
+label onfail ; 
+if ( root > 10 ) 
+  sil-all ; 
+  quote PRODUCED AN ERROR (CANNOT GENERATE ALL TREES TO
+  CHECK WHETHER CONSTRAINTS ARE SATISFIABLE) ; 
+  proc/; 
+  end 
+var: maxt ; 
+set maxt numclads[ root ] + 10 ; 
+hold 'maxt' ; 
+all ;
+best [ ; 
+if ( ntrees >= 0 ) 
+   goto ] ; 
+   mono ; 
+   errmsg SOME TREES FULFILL CONSTRAINTS, NOT FOUND! ; 
+else 
+   quote COULDNT FIND ANY TREES --NONE EXIST!!! ; 
+   end 
+proc/; 
