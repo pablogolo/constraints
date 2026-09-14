@@ -1,4 +1,4 @@
-This folder contains TNT scripts.
+This folder contains TNT scripts, used for checking the correctness and efficiency of the different types of constraints, as implemented in TNT.
 
 GRANDTEST
 
