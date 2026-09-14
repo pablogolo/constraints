@@ -1,1 +1,66 @@
-
+taxn=; 
+coll 3 ; 
+macro=; 
+var: myreps datax i j k dacut mync t0 t1 seeded ; 
+sil=all;
+rs[;
+txts10000;
+rep-;
+set datax 15 ; 
+set dacut 6 ; 
+set myreps 1000 ; 
+set mync 20 ; 
+if ( argnumber == 1 ) 
+  if ( eqstring[ %1 help ] ) 
+    errmsg A script to test tree-constraints with floating taxa 
+    Possible args: 
+        1 - Number of taxa 
+        2 - Number of taxa to remove from constraints 
+        3 - Replications (i.e. number of matrices)
+        4 - Number of characters  
+    All args are optional. Defaults are: 
+        15 taxa, 6 taxa removed, 1000 reps, 20 characters ; 
+    xend     
+if ( argnumber ) set datax %1 ; set dacut %1 / 2 ; set dacut '/0dacut' ; end 
+if ( argnumber > 1 ) set dacut %2 ; end 
+if ( argnumber > 2 ) set myreps %3 ; end 
+if ( argnumber > 3 ) set mync %4 ; end 
+resettime ; 
+sil = all ; 
+lquote[ ; 
+lquote = ; 
+loop 1 'myreps'
+   progress=; progress 0 0 REP #1 of 'myreps' ; 
+   set seeded rseed ; 
+   rs*;xr/'mync' 'datax';taxalfa * *;k0;ra1 33 4 ;  
+   ag=0 *'dacut' <0 0;prunt/{0};
+   hold 1000 / 1001 ; 
+   forc=&0; tvault >0 ; 
+   const=;
+   k0;
+   mu1= wag ; bb=tbr nomulp;  
+   k1 ; 
+   bb = mulp ; 
+   set i length[0];
+   set t0 ntrees + 1 ; 
+   loop 0 ntrees 
+       if(!mono[#2])errmsg OOOPS;end 
+       stop
+   tv >. ; 
+   k0; tv < 0 ; 
+   forc /&0 ; 
+   const=; k0; tv < 1.; 
+   bb = mulp ; 
+   set t1 ntrees + 1 ; 
+   set j length[0]; 
+   if( ( 'i'!='j' ) || ( 't0' != 't1' ) ) 
+      errmsg OOOOPS -- had 't0' trees of 'i' steps, 
+      now have 't1' trees of 'j' (seed = 'seeded'); 
+      end 
+   stop 
+progress/; 
+report=; 
+sil-all; 
+set i time ; 
+quote NO ERRORS ('/.2i' sec);
+proc/; 
