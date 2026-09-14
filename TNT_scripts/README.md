@@ -53,3 +53,10 @@ that fewer groups are removed --more likely with larger number of groups removed
 At the end, it writes to "tnt-vs-itself.csv" the comma-separated values for the times used for each run. Columns are: number of 
 times a group is marked for removal, time for constraints as tree-constraints, time for constraints as group membership variables.
 
+TAXALFA
+
+This script either creates a dataset with taxa alphabetically named (as many characters as first arg, as many taxta as the second), or 
+renames the taxa in an existing dataset alphabetically (if using two asterisks as args). Some of the other scripts use this, so 
+you need to download it to your computer for using the other scripts.
+
+
