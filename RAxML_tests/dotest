@@ -1,1 +1,13 @@
-
+echo rseed $RANDOM ";" rseed $5 ";" proc/";" > kukuku
+echo ./dotest $1 $2 $3 $4 $5 > TNT-info.txt 
+cat kukuku >> TNT-info.txt 
+$HOME/tnt/tnt p kukuku, mxr 3000, dodata $1 $2 $3 $4 stay,forc="&"0,const=,si-all,tsiz,tnod,rep=,rep+/1,taxco+.,k0,resettime,log + TNT-info.txt, watch=,mu10=ho1,set 0 time/10, set 0 += 0.05, macfloat 4, quote AVG TIME PER SEARCH "'0' ;"zz
+./runraxml
+tail -n 5 infile.raxml.log >> TNT-info.txt
+$HOME/tnt/tnt macro=, \
+     hifile open infile.raxml.log, hifile seeks time: , set 0 hifnumber, \
+     hifile close, hifile open TNT-info.txt, hifile seeks SEARCH , set 1 hifnumber, hifile close, \
+     set 2 "'0'/'1'", log + TNT-info.txt, quote TIME RATIO RAXML/TNT: "'/.2(2)';" \
+     log /";" lquo[,lquo=,log + values.csv, quote $1 , $2 , $3 , $4 , "'/.2(1)' , '/.2(0)' , '/.2(2)' ;" zzz
+$HOME/tnt/tnt p kukuku, mxr 3000, dodata $1 $2 $3 $4 stay,forc="&"0,const=,si-all,tsiz,tnod,rep=,rep+/1,taxco+.,k0,p"["infile.raxml.startTree,log + TNT-info.txt, quote --------";" quote COMPARING RESULTS";" set 3 length[0],bb=nom spr,set 0 accepted,quote "'0' changes made to tree;bb=tbr;set 2 accepted,quote TBR: '2' more changes; set 3 -= length[0], rep-,sil=all,log+values.csv, quote :, '0' , '2' , '3' ;"zz
+cat TNT-info.txt
